@@ -1,70 +1,13 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Установите https://github.com/verenichvs/spa-back репозиторий и откройте в VSCode. Создайте файл .env в корневой директории и заполните его как на картинке:
+![image](https://github.com/verenichvs/spa-front/assets/115184978/2e94e075-b62a-43e5-9c61-4828f58615db)
 
-## Available Scripts
+  Установите этот репозиторий и откройте в VSCode. Постройте проект командой yarn build и запустите проект командой yarn start. откроется окно браузера и вы перейдёте на страницу регистрации:
+  ![image](https://github.com/verenichvs/spa-front/assets/115184978/ce1cadc5-a54b-4675-821a-830ab8736811)
+В случае если не соблюдаются требования - вы не будете зарегистрированы: -User Name (цифры и буквы латинского алфавита) – обязательное поле; -E-mail (формат email) – обязательное поле; -password (цифры и буквы латинского алфавита, минимальное количество символов 7) – обязательное поле. Если регистрация успешна - вы перейдёте на страницу как на картинке:
+![image](https://github.com/verenichvs/spa-front/assets/115184978/a5fb3b1a-b216-473f-82a2-46b1c1ee1b4d)
+это страница авторизации. Введите в поле "логин" ваш email из регистрации, а в поле пароль - ваш пароль. Если пользователя с таким имейлом не существует или пароль не от этого аккаунта - вас не авторизирует. Если же авторизация успешна - вы перейдёте на страницу с сообщениями. 
+![image](https://github.com/verenichvs/spa-front/assets/115184978/4b20eb6c-856f-41b0-86a0-d59f9a559008)
 
-In the project directory, you can run:
-
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+вы можете отвечать на коментарии нажав кнопку ответить под нужным сообщением или оставлять своё сообщение. поле "Ваш комментарий"- обязательное. в нём вы можете использовать такие html теги которые обязательно должны быть закрыты: ![image](https://github.com/verenichvs/spa-front/assets/115184978/da4290f6-69e5-4993-9b7d-dd3fb77aea6e)
+ если условия не соблюдаются - вы не сможете оставить сообщение. поле file - не обязательно. Можно выбрать картинку или текстовый документ таких форматов: JPG, GIF, PNG, TXT. файл txt не должен превышать 100 кб(вернётся ошибка) а изображение должно быть не более 320х240 пикселей иначе его автоматически обрежет до заданых значений. 
