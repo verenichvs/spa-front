@@ -9,6 +9,7 @@ import {
   Routes,
   Navigate,
 } from "react-router-dom";
+
 const App = () => {
   return (
     <Router>

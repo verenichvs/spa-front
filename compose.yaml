@@ -1,0 +1,8 @@
+version: "3"
+
+services:
+  app:
+    container_name: spa-front
+    build: . # Путь к Dockerfile вашего приложения
+    ports:
+      - "4000:4000" # Предполагается, что ваше приложение слушает на порту 3000

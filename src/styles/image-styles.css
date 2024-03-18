@@ -1,0 +1,42 @@
+.comment-image {
+  overflow: hidden;
+  position: relative;
+  transition: transform 0.3s, border 0.3s;
+}
+
+.comment-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.comment-image:hover {
+  border: 2px solid red;
+  transform: scale(1.1);
+}
+
+.comment-image.gif img {
+  opacity: 0; /* Скрываем статичное изображение гифки */
+}
+
+.comment-image.gif::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* Вместо динамических данных используйте статичные классы */
+  background-image: url("data:image/gif;base64, ...");
+  background-size: cover;
+  animation: gifAnimation 1s infinite;
+}
+
+@keyframes gifAnimation {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 100% 0;
+  }
+}

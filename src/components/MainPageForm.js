@@ -1,16 +1,40 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import ReCAPTCHA from "react-google-recaptcha";
+import "../styles/image-styles.css";
+import "../styles/main-page-style.css";
+import { validateXhtmlTags } from "./xhtmlValidation";
+import {
+  handleTagClick,
+  handleTextSelection,
+  parseHtmlTags,
+} from "./TagsButtonLogic";
+import io from "socket.io-client";
 
 const Comment = ({ comment, onReply }) => {
   const [replyText, setReplyText] = useState("");
   const [isReplying, setIsReplying] = useState(false);
   const [attachment, setAttachment] = useState(null);
+  const [recaptchaValue, setRecaptchaValue] = useState(null);
+  const [comments, setComments] = useState([]);
+  const imageUrl = `data:${comment.fileName};base64,${comment.file}`;
+  const [selectedTag, setSelectedTag] = useState(null);
+  const baseUrl = process.env.REACT_APP_SERVER;
 
   const handleReply = async () => {
-    if (replyText.trim() === "" && !attachment) {
-      alert("Введите текст комментария или загрузите изображение");
+    // if (recaptchaValue === null) {
+    //   alert("Пройдите капчу ");
+    //   return;
+    // }
+    if (replyText.trim() === "") {
+      alert("Введите текст комментария ");
       return;
     }
+    const isValidXhtml = validateXhtmlTags(replyText);
 
+    if (!isValidXhtml) {
+      alert("Текст комментария содержит недопустимые XHTML теги");
+      return;
+    }
     try {
       const formData = new FormData();
       formData.append("parrentCommentId", comment.id);
@@ -20,7 +44,7 @@ const Comment = ({ comment, onReply }) => {
       }
 
       const token = getToken();
-      const response = await fetch("http://localhost:4000/comments/add", {
+      const response = await fetch(`${baseUrl}/comments/add`, {
         method: "POST",
         body: formData,
         headers: {
@@ -31,50 +55,97 @@ const Comment = ({ comment, onReply }) => {
       if (!response.ok) {
         throw new Error("Ошибка при отправке комментария");
       }
+      if (response.ok) {
+        const socket = io(baseUrl);
+        socket.emit("getComments");
 
-      const responseData = await response.json();
-      onReply(responseData);
+        socket.on("comments", (data) => {
+          setComments(data);
+        });
+
+        setReplyText("");
+        setIsReplying(false);
+        setAttachment(null);
+
+        return <CommentsList comments={comments} />;
+      }
+
+      // const responseData = await response.json();
+      // onReply(responseData);
     } catch (error) {
       console.error(error);
       alert("Произошла ошибка при отправке комментария");
     }
-
-    setReplyText("");
-    setIsReplying(false);
-    setAttachment(null);
-  };
-  const parseHtmlTags = (text) => {
-    const range = document.createRange();
-    const fragment = range.createContextualFragment(text);
-    const div = document.createElement("div");
-    div.appendChild(fragment);
-    return div.innerHTML;
   };
 
   return (
     <div key={comment.id}>
-      <strong>{comment.user.username}:</strong>{" "}
+      <strong>{comment.user.username}:</strong> {comment.user.email}
+      {" postedAt: "}
+      {comment.createdAt} <div>{" Добавил комментарий: "}</div>
       <div dangerouslySetInnerHTML={{ __html: parseHtmlTags(comment.text) }} />
       {comment.file && (
-        <img
-          src={`data:image/jpeg;base64,${comment.file}`}
-          alt="Картинка комментария"
-        />
+        <div>
+          {comment.fileName && comment.fileName.startsWith("image/") ? (
+            <img
+              className="comment-image "
+              src={imageUrl}
+              alt="Картинка комментария"
+              style={{ maxWidth: "320px", maxHeight: "240px" }}
+            />
+          ) : (
+            <a
+              href={`data:text/plain;charset=utf-8;base64,${comment.file}`}
+              download={`${comment.fileName}`}
+            >
+              Скачать прикреплённый текстовый файл
+            </a>
+          )}
+        </div>
       )}
       <div>
         {isReplying ? (
           <div>
-            <input
+            <textarea
+              id="commentTextarea"
               type="text"
               placeholder="Ваш комментарий"
               value={replyText}
               onChange={(e) => setReplyText(e.target.value)}
             />
+            <button
+              onClick={handleTagClick(
+                selectedTag,
+                setReplyText,
+                setSelectedTag
+              )}
+            >
+              Применить тег
+            </button>
+            <button onClick={() => handleTextSelection(setSelectedTag)("i")}>
+              [i]
+            </button>
+            <button
+              onClick={() => handleTextSelection(setSelectedTag)("strong")}
+            >
+              [strong]
+            </button>
+            <button onClick={() => handleTextSelection(setSelectedTag)("code")}>
+              [code]
+            </button>
+            <button onClick={() => handleTextSelection(setSelectedTag)("a")}>
+              [a]
+            </button>
             <input
               type="file"
-              accept=".jpg, .jpeg, .png, .txt"
+              accept=".jpg, .jpeg, .png, .gif, .txt"
               onChange={(e) => setAttachment(e.target.files[0])}
             />
+            {/* <ReCAPTCHA
+              sitekey="6LcKsZUpAAAAAMHFENxnbTqDLHqH_038E7pq3l5e"
+              onChange={(value) => setRecaptchaValue(value)}
+            />
+            <button disabled={!recaptchaValue} onClick={handleReply}> */}
             <button onClick={handleReply}>Ответить</button>
           </div>
         ) : (
@@ -95,10 +166,77 @@ const Comment = ({ comment, onReply }) => {
 const CommentsList = ({ comments, onReply }) => {
   const [newCommentText, setNewCommentText] = useState("");
   const [newCommentAttachment, setNewCommentAttachment] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [sortField, setSortField] = useState(null);
+  const [sortOrder, setSortOrder] = useState("asc"); // "asc" or "desc"
+  const [recaptchaValue, setRecaptchaValue] = useState(null);
+  const [selectedTag, setSelectedTag] = useState(null);
+  const [commentaries, setComments] = useState([]);
+  const commentsPerPage = 25;
+  const baseUrl = process.env.REACT_APP_SERVER;
+
+  const indexOfLastComment = currentPage * commentsPerPage;
+  const indexOfFirstComment = indexOfLastComment - commentsPerPage;
+  const handleSortChange = (field) => {
+    if (field === sortField) {
+      // If the same field is clicked again, toggle the sort order
+      setSortOrder((prevOrder) => (prevOrder === "asc" ? "desc" : "asc"));
+    } else {
+      // If a different field is clicked, set it as the new sorting field with default ascending order
+      setSortField(field);
+      setSortOrder("asc");
+    }
+  };
+
+  const sortedComments = () => {
+    if (!sortField) {
+      // If no sorting is applied, return the original comments array
+      return comments;
+    }
+
+    return comments.slice().sort((a, b) => {
+      const fieldA = getField(a, sortField);
+      const fieldB = getField(b, sortField);
+
+      // Compare values based on the selected field and sort order
+      if (sortOrder === "asc") {
+        return fieldA.localeCompare(fieldB, undefined, { sensitivity: "base" });
+      } else {
+        return fieldB.localeCompare(fieldA, undefined, { sensitivity: "base" });
+      }
+    });
+  };
+
+  const getField = (comment, field) => {
+    // Helper function to extract nested fields
+    const keys = field.split(".");
+    return keys.reduce((obj, key) => obj && obj[key], comment);
+  };
+
+  const currentComments = sortedComments().slice(
+    indexOfFirstComment,
+    indexOfLastComment
+  );
+
+  const totalPages = Math.ceil(comments.length / commentsPerPage);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
   const handleNewComment = async () => {
-    if (newCommentText.trim() === "" && !newCommentAttachment) {
-      alert("Введите текст комментария или загрузите изображение");
+    if (recaptchaValue === null) {
+      alert("Пройдите капчу ");
+      return;
+    }
+    if (newCommentText.trim() === "") {
+      alert("Введите текст комментария ");
+      return;
+    }
+    const isValidXhtml = validateXhtmlTags(newCommentText);
+
+    if (!isValidXhtml) {
+      alert("Текст комментария содержит недопустимые XHTML теги");
       return;
     }
 
@@ -110,7 +248,7 @@ const CommentsList = ({ comments, onReply }) => {
       }
 
       const token = getToken();
-      const response = await fetch("http://localhost:4000/comments/add", {
+      const response = await fetch(`${baseUrl}/comments/add`, {
         method: "POST",
         body: formData,
         headers: {
@@ -121,46 +259,96 @@ const CommentsList = ({ comments, onReply }) => {
       if (!response.ok) {
         throw new Error("Ошибка при отправке комментария");
       }
+      if (response.ok) {
+        const socket = io(baseUrl);
+        socket.emit("getComments");
 
-      const responseData = await response.json();
-      onReply(responseData);
+        socket.on("comments", (data) => {
+          setComments(data);
+        });
+        setNewCommentText("");
+        setNewCommentAttachment(null);
+        return <CommentsList commentaries={commentaries} />;
+      }
     } catch (error) {
       console.error(error);
       alert("Произошла ошибка при отправке комментария");
     }
-
-    setNewCommentText("");
-    setNewCommentAttachment(null);
   };
 
   return (
     <div>
       <h2>Комментарии</h2>
-      {comments.map((comment) => (
+      <div>
+        <button onClick={() => handleSortChange("user.username")}>
+          Сортировать по Имени пользователя
+        </button>
+        <button onClick={() => handleSortChange("user.email")}>
+          Сортировать по E-mail
+        </button>
+        <button onClick={() => handleSortChange("createdAt")}>
+          Сортировать по Дате добавления
+        </button>
+      </div>
+      {currentComments.map((comment) => (
         <Comment key={comment.id} comment={comment} onReply={onReply} />
       ))}
+      {totalPages > 1 && (
+        <div>
+          <ul className="pagination">
+            {Array.from({ length: totalPages }).map((_, index) => (
+              <li key={index} onClick={() => handlePageChange(index + 1)}>
+                {index + 1}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       <div>
-        <input
+        <textarea
+          id="commentTextarea"
           type="text"
           placeholder="Ваш комментарий"
           value={newCommentText}
           onChange={(e) => setNewCommentText(e.target.value)}
         />
+        <button
+          onClick={handleTagClick(
+            selectedTag,
+            setNewCommentText,
+            setSelectedTag
+          )}
+        >
+          Применить тег
+        </button>
+        <button onClick={() => handleTextSelection(setSelectedTag)("i")}>
+          [i]
+        </button>
+        <button onClick={() => handleTextSelection(setSelectedTag)("strong")}>
+          [strong]
+        </button>
+        <button onClick={() => handleTextSelection(setSelectedTag)("code")}>
+          [code]
+        </button>
+        <button onClick={() => handleTextSelection(setSelectedTag)("a")}>
+          [a]
+        </button>
         <input
           type="file"
-          accept=".jpg, .jpeg, .png, .txt"
+          accept=".jpg, .jpeg, .png, .gif, .txt"
           onChange={(e) => setNewCommentAttachment(e.target.files[0])}
         />
-        <button onClick={handleNewComment}>Добавить комментарий</button>
+        <ReCAPTCHA
+          sitekey="6LcKsZUpAAAAAMHFENxnbTqDLHqH_038E7pq3l5e"
+          onChange={(value) => setRecaptchaValue(value)}
+        />
+        <button disabled={!recaptchaValue} onClick={handleNewComment}>
+          Добавить комментарий
+        </button>
       </div>
     </div>
   );
-};
-
-const parseHtmlTags = (text) => {
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(text, "text/html");
-  return doc.body.innerHTML;
 };
 
 const getToken = () => {
