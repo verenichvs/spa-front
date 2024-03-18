@@ -6,6 +6,8 @@ const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [token, setToken] = useState("");
+  const [error, setError] = useState("");
+  const baseUrl = process.env.REACT_APP_SERVER;
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
@@ -19,7 +21,7 @@ const LoginForm = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:4000/auth/login",
+        `${baseUrl}/auth/login`,
         {
           email,
           password,
@@ -38,6 +40,7 @@ const LoginForm = () => {
       window.location.href = "/main";
     } catch (error) {
       console.error("Ошибка авторизации:", error.message);
+      setError("Ошибка авторизации. Неверные данные пользователя.");
     }
   };
   const login = (newToken) => {
@@ -46,8 +49,9 @@ const LoginForm = () => {
   };
   return (
     <form onSubmit={handleSubmit}>
+      {error && <div style={{ color: "red" }}>{error}</div>}
       <div>
-        <label>Логин:</label>
+        <label>Имейл:</label>
         <input type="text" value={email} onChange={handleEmailChange} />
       </div>
       <div>
