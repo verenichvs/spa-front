@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import userEvent from "@testing-library/user-event";
+import "../styles/login-form-styles.css";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
@@ -47,23 +48,53 @@ const LoginForm = () => {
     setToken(newToken);
     localStorage.setItem("token", newToken);
   };
+  // return (
+  //   <form onSubmit={handleSubmit}>
+  //     {error && <div style={{ color: "red" }}>{error}</div>}
+  //     <div>
+  //       <label>Имейл:</label>
+  //       <input type="text" value={email} onChange={handleEmailChange} />
+  //     </div>
+  //     <div>
+  //       <label>Пароль:</label>
+  //       <input
+  //         type="password"
+  //         value={password}
+  //         onChange={handlePasswordChange}
+  //       />
+  //     </div>
+  //     <button type="submit">Войти</button>
+  //   </form>
+  // );
   return (
-    <form onSubmit={handleSubmit}>
-      {error && <div style={{ color: "red" }}>{error}</div>}
-      <div>
-        <label>Имейл:</label>
-        <input type="text" value={email} onChange={handleEmailChange} />
+    <div className="login-form-container">
+      <div className="login-form">
+        <form onSubmit={handleSubmit}>
+          <div className="form-field">
+            <label>Имейл:</label>
+            <input
+              type="text"
+              value={email}
+              onChange={handleEmailChange}
+              className="text-input"
+            />
+          </div>
+          <div className="form-field">
+            <label>Пароль:</label>
+            <input
+              type="password"
+              value={password}
+              onChange={handlePasswordChange}
+              className="text-input"
+            />
+          </div>
+          <button type="submit" className="login-button">
+            Войти
+          </button>
+        </form>
       </div>
-      <div>
-        <label>Пароль:</label>
-        <input
-          type="password"
-          value={password}
-          onChange={handlePasswordChange}
-        />
-      </div>
-      <button type="submit">Войти</button>
-    </form>
+      {error && <div className="error-message">{error}</div>}
+    </div>
   );
 };
 

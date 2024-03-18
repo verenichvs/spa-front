@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import "../styles/registration-form-styles.css";
 
 const RegistrationForm = () => {
   const [username, setUsername] = useState("");
@@ -71,26 +72,41 @@ const RegistrationForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      {error && <div style={{ color: "red" }}>{error}</div>}
-      <div>
-        <label>Логин:</label>
-        <input type="text" value={username} onChange={handleUsernameChange} />
+    <div className="registration-form-container">
+      <div className="registration-form">
+        <form onSubmit={handleSubmit}>
+          <div className="form-field">
+            <label>Логин:</label>
+            <input
+              type="text"
+              value={username}
+              onChange={handleUsernameChange}
+              className="text-input"
+            />
+          </div>
+          <div className="form-field">
+            <label>Email:</label>
+            <input
+              type="text"
+              value={email}
+              onChange={handleEmailChange}
+              className="text-input"
+            />
+          </div>
+          <div className="form-field">
+            <label>Пароль:</label>
+            <input
+              type="password"
+              value={password}
+              onChange={handlePasswordChange}
+              className="text-input"
+            />
+          </div>
+          <button type="submit">Зарегистрироваться</button>
+        </form>
       </div>
-      <div>
-        <label>Email:</label>
-        <input type="text" value={email} onChange={handleEmailChange} />
-      </div>
-      <div>
-        <label>Пароль:</label>
-        <input
-          type="password"
-          value={password}
-          onChange={handlePasswordChange}
-        />
-      </div>
-      <button type="submit">Зарегистрироваться</button>
-    </form>
+      {error && <div className="error-message">{error}</div>}
+    </div>
   );
 };
 

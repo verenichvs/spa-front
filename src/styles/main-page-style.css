@@ -15,3 +15,55 @@
 .pagination li:hover {
   background-color: #f0f0f0;
 }
+.arrow-svg {
+  position: absolute;
+  width: 50%; /* или любая другая подходящая ширина */
+  height: 100%;
+}
+
+.arrow-svg line {
+  stroke: #ccc;
+  stroke-width: 2;
+}
+.comment-tree {
+  position: relative;
+}
+
+.comment-tree .comment {
+  position: relative;
+  padding-left: 20px; /* Отступ слева для отображения "дерева" */
+}
+
+.comment-tree .comment .arrow-svg {
+  top: 0;
+  left: 10px; /* Положение стрелки относительно комментария */
+}
+.comment {
+  border: 1px solid #ccc; /* Устанавливаем обычную рамку */
+  padding: 10px; /* Добавляем отступ внутри комментария */
+  margin-bottom: 10px; /* Добавляем отступ между комментариями */
+  transition: background-color 0.3s ease; /* Добавляем анимацию при наведении */
+}
+
+.comment:hover {
+  background-color: #f0f0f0; /* Подсвечиваем комментарий при наведении */
+}
+
+.arrow-svg {
+  position: absolute;
+  width: 50%; /* или любая другая подходящая ширина */
+  height: 100%;
+}
+
+.arrow-svg line {
+  stroke: #ccc;
+  stroke-width: 2;
+}
+
+.comment-content {
+  margin-left: 10px; /* Отступ для контента комментария */
+}
+
+.main-comment {
+  border-width: 5px; /* Устанавливаем более толстую рамку для основных комментариев */
+}
