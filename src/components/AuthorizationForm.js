@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import axios from "axios";
-import userEvent from "@testing-library/user-event";
 import "../styles/login-form-styles.css";
 
 const LoginForm = () => {
@@ -48,24 +47,7 @@ const LoginForm = () => {
     setToken(newToken);
     localStorage.setItem("token", newToken);
   };
-  // return (
-  //   <form onSubmit={handleSubmit}>
-  //     {error && <div style={{ color: "red" }}>{error}</div>}
-  //     <div>
-  //       <label>Имейл:</label>
-  //       <input type="text" value={email} onChange={handleEmailChange} />
-  //     </div>
-  //     <div>
-  //       <label>Пароль:</label>
-  //       <input
-  //         type="password"
-  //         value={password}
-  //         onChange={handlePasswordChange}
-  //       />
-  //     </div>
-  //     <button type="submit">Войти</button>
-  //   </form>
-  // );
+
   return (
     <div className="login-form-container">
       <div className="login-form">

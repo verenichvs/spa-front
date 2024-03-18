@@ -3,7 +3,7 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
-  flex-direction: column; /* Добавляем направление расположения контейнера по вертикали */
+  flex-direction: column;
 }
 
 .login-form {
@@ -40,6 +40,5 @@
 .error-message {
   color: red;
   margin-top: 10px;
-  /* width: 100%; Растягиваем сообщение об ошибке на всю ширину контейнера */
-  text-align: center; /* Центрируем текст по горизонтали */
+  text-align: center;
 }
