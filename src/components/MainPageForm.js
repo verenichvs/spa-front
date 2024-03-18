@@ -19,12 +19,13 @@ const Comment = ({ comment, onReply }) => {
   const imageUrl = `data:${comment.fileName};base64,${comment.file}`;
   const [selectedTag, setSelectedTag] = useState(null);
   const baseUrl = process.env.REACT_APP_SERVER;
+  const captchaKey = process.env.REACT_APP_SERVER;
 
   const handleReply = async () => {
-    // if (recaptchaValue === null) {
-    //   alert("Пройдите капчу ");
-    //   return;
-    // }
+    if (recaptchaValue === null) {
+      alert("Пройдите капчу ");
+      return;
+    }
     if (replyText.trim() === "") {
       alert("Введите текст комментария ");
       return;
@@ -141,12 +142,13 @@ const Comment = ({ comment, onReply }) => {
               accept=".jpg, .jpeg, .png, .gif, .txt"
               onChange={(e) => setAttachment(e.target.files[0])}
             />
-            {/* <ReCAPTCHA
-              sitekey="6LcKsZUpAAAAAMHFENxnbTqDLHqH_038E7pq3l5e"
+            <ReCAPTCHA
+              sitekey={captchaKey}
               onChange={(value) => setRecaptchaValue(value)}
             />
-            <button disabled={!recaptchaValue} onClick={handleReply}> */}
-            <button onClick={handleReply}>Ответить</button>
+            <button disabled={!recaptchaValue} onClick={handleReply}>
+              Добавить комментарий
+            </button>
           </div>
         ) : (
           <button onClick={() => setIsReplying(true)}>Ответить</button>
@@ -174,6 +176,7 @@ const CommentsList = ({ comments, onReply }) => {
   const [commentaries, setComments] = useState([]);
   const commentsPerPage = 25;
   const baseUrl = process.env.REACT_APP_SERVER;
+  const captchaKey = process.env.REACT_APP_RECAPTCHA_KEY;
 
   const indexOfLastComment = currentPage * commentsPerPage;
   const indexOfFirstComment = indexOfLastComment - commentsPerPage;
@@ -340,7 +343,7 @@ const CommentsList = ({ comments, onReply }) => {
           onChange={(e) => setNewCommentAttachment(e.target.files[0])}
         />
         <ReCAPTCHA
-          sitekey="6LcKsZUpAAAAAMHFENxnbTqDLHqH_038E7pq3l5e"
+          sitekey={captchaKey}
           onChange={(value) => setRecaptchaValue(value)}
         />
         <button disabled={!recaptchaValue} onClick={handleNewComment}>
