@@ -19,8 +19,8 @@
   border-radius: 5px;
   padding: 20px;
   margin-top: 10px;
-  display: flex; /* Добавляем flex-контейнер для выравнивания элементов */
-  flex-direction: column; /* Устанавливаем направление осей на вертикальное */
+  display: flex;
+  flex-direction: column;
 }
 
 .form-field {
@@ -28,7 +28,7 @@
 }
 
 .text-input {
-  width: calc(100% - 16px); /* учитываем внутренние отступы */
+  width: calc(100% - 16px);
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 3px;
@@ -41,7 +41,7 @@ button {
   border: none;
   border-radius: 3px;
   cursor: pointer;
-  align-self: center; /* выравниваем кнопку по центру */
+  align-self: center;
 }
 
 button:hover {

@@ -17,7 +17,7 @@
 }
 .arrow-svg {
   position: absolute;
-  width: 50%; /* или любая другая подходящая ширина */
+  width: 50%;
   height: 100%;
 }
 
@@ -31,27 +31,27 @@
 
 .comment-tree .comment {
   position: relative;
-  padding-left: 20px; /* Отступ слева для отображения "дерева" */
+  padding-left: 20px;
 }
 
 .comment-tree .comment .arrow-svg {
   top: 0;
-  left: 10px; /* Положение стрелки относительно комментария */
+  left: 10px;
 }
 .comment {
-  border: 1px solid #ccc; /* Устанавливаем обычную рамку */
-  padding: 10px; /* Добавляем отступ внутри комментария */
-  margin-bottom: 10px; /* Добавляем отступ между комментариями */
-  transition: background-color 0.3s ease; /* Добавляем анимацию при наведении */
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+  transition: background-color 0.3s ease;
 }
 
 .comment:hover {
-  background-color: #f0f0f0; /* Подсвечиваем комментарий при наведении */
+  background-color: #f0f0f0;
 }
 
 .arrow-svg {
   position: absolute;
-  width: 50%; /* или любая другая подходящая ширина */
+  width: 50%;
   height: 100%;
 }
 
@@ -61,9 +61,9 @@
 }
 
 .comment-content {
-  margin-left: 10px; /* Отступ для контента комментария */
+  margin-left: 10px;
 }
 
 .main-comment {
-  border-width: 5px; /* Устанавливаем более толстую рамку для основных комментариев */
+  border-width: 5px;
 }

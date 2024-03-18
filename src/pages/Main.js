@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import CommentsList from "../components/MainPageForm";
 import io from "socket.io-client";
-import axios from "axios";
 
 const CommentsPage = () => {
   const [comments, setComments] = useState([]);
@@ -17,7 +16,6 @@ const CommentsPage = () => {
       setComments(data);
     });
 
-    // Обработка размонтирования компонента
     return () => {
       socket.disconnect();
     };

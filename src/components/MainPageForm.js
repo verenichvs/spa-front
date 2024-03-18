@@ -70,9 +70,6 @@ const Comment = ({ comment, onReply }) => {
 
         return <CommentsList comments={comments} />;
       }
-
-      // const responseData = await response.json();
-      // onReply(responseData);
     } catch (error) {
       console.error(error);
       alert("Произошла ошибка при отправке комментария");
@@ -173,7 +170,7 @@ const CommentsList = ({ comments, onReply }) => {
   const [newCommentAttachment, setNewCommentAttachment] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [sortField, setSortField] = useState(null);
-  const [sortOrder, setSortOrder] = useState("asc"); // "asc" or "desc"
+  const [sortOrder, setSortOrder] = useState("asc");
   const [recaptchaValue, setRecaptchaValue] = useState(null);
   const [selectedTag, setSelectedTag] = useState(null);
   const [commentaries, setComments] = useState([]);
@@ -185,10 +182,8 @@ const CommentsList = ({ comments, onReply }) => {
   const indexOfFirstComment = indexOfLastComment - commentsPerPage;
   const handleSortChange = (field) => {
     if (field === sortField) {
-      // If the same field is clicked again, toggle the sort order
       setSortOrder((prevOrder) => (prevOrder === "asc" ? "desc" : "asc"));
     } else {
-      // If a different field is clicked, set it as the new sorting field with default ascending order
       setSortField(field);
       setSortOrder("asc");
     }
@@ -196,15 +191,12 @@ const CommentsList = ({ comments, onReply }) => {
 
   const sortedComments = () => {
     if (!sortField) {
-      // If no sorting is applied, return the original comments array
       return comments;
     }
 
     return comments.slice().sort((a, b) => {
       const fieldA = getField(a, sortField);
       const fieldB = getField(b, sortField);
-
-      // Compare values based on the selected field and sort order
       if (sortOrder === "asc") {
         return fieldA.localeCompare(fieldB, undefined, {
           sensitivity: "base",
@@ -218,7 +210,6 @@ const CommentsList = ({ comments, onReply }) => {
   };
 
   const getField = (comment, field) => {
-    // Helper function to extract nested fields
     const keys = field.split(".");
     return keys.reduce((obj, key) => obj && obj[key], comment);
   };
