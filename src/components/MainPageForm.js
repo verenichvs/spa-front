@@ -80,7 +80,10 @@ const Comment = ({ comment, onReply }) => {
   };
 
   return (
-    <div key={comment.id}>
+    <div
+      key={comment.id}
+      className={`comment ${!comment.parentCommentId ? "main-comment" : ""}`}
+    >
       <strong>{comment.user.username}:</strong> {comment.user.email}
       {" postedAt: "}
       {comment.createdAt} <div>{" Добавил комментарий: "}</div>
@@ -203,9 +206,13 @@ const CommentsList = ({ comments, onReply }) => {
 
       // Compare values based on the selected field and sort order
       if (sortOrder === "asc") {
-        return fieldA.localeCompare(fieldB, undefined, { sensitivity: "base" });
+        return fieldA.localeCompare(fieldB, undefined, {
+          sensitivity: "base",
+        });
       } else {
-        return fieldB.localeCompare(fieldA, undefined, { sensitivity: "base" });
+        return fieldB.localeCompare(fieldA, undefined, {
+          sensitivity: "base",
+        });
       }
     });
   };
