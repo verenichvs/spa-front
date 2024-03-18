@@ -19,7 +19,7 @@ const Comment = ({ comment, onReply }) => {
   const imageUrl = `data:${comment.fileName};base64,${comment.file}`;
   const [selectedTag, setSelectedTag] = useState(null);
   const baseUrl = process.env.REACT_APP_SERVER;
-  const captchaKey = process.env.REACT_APP_SERVER;
+  const captchaKey = process.env.REACT_APP_RECAPTCHA_KEY;
 
   const handleReply = async () => {
     if (recaptchaValue === null) {
